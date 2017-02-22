@@ -1,12 +1,36 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.parc.chat</groupId>
   <artifactId>MicroTextTokenizer</artifactId>
   <packaging>jar</packaging>
-  <version>1.0</version>
-  <name>MicroTextTokenizer</name>
-  <url>http://maven.apache.org</url>
+  <version>1.0.0</version>
+  <name>${project.groupId}:${project.artifactId}</name>
+  <description>Java tokenization library that can be used by NLP systems to operate on text from Twitter, SMS, Slack, and other messaging platforms.</description>
+  <url>https://github.com/PARC/MicroTextTokenizer</url>
+
+  <licenses>
+    <license>
+      <name>BSD-3-Clause</name>
+      <url>https://opensource.org/licenses/BSD-3-Clause</url>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <name>Kyle Dent</name>
+      <email>kdent@parc.com</email>
+      <organization>PARC, Inc.</organization>
+      <organizationUrl>http://www.parc.com/</organizationUrl>
+    </developer>
+  </developers>
+
+  <scm>
+    <connection>scm:git:git://github.com/PARC/MicroTextTokenizer.git</connection>
+    <developerConnection>scm:git:ssh://github.com:PARC/MicroTextTokenizer.git</developerConnection>
+    <url>https://github.com/PARC/MicroTextTokenizer/tree/master</url>
+  </scm>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -20,5 +44,45 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+
+  <build>
+    <plugins>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>sign-artifacts</id>
+            <phase>verify</phase>
+            <goals><goal>sign</goal></goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals><goal>jar</goal></goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>attach-javadocs</id>
+            <goals><goal>jar</goal></goals>
+          </execution>
+        </executions>
+      </plugin>
+
+    </plugins>
+  </build>
 
 </project>
