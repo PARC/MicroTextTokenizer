@@ -443,14 +443,26 @@ public class MicroTextTokenizerTest {
 	public void hyphenTest() {
 		MicroTextTokenizer tok = new MicroTextTokenizer("An advantage of grid-energy is");
 		tok.tokenize();
-		assertEquals("grid-energy", tok.getTokensAsList().get(3));
+		assertEquals("grid", tok.getTokensAsList().get(3));
+		assertEquals("energy", tok.getTokensAsList().get(5));
 	}
+
+    @Test
+    public void hyphenTest2() {
+        MicroTextTokenizer tok = new MicroTextTokenizer("This is a sentence with a hyphenated-word.");
+        List<LabeledToken> tokenList = tok.tokenize();
+        assertEquals(10, tokenList.size());
+        assertEquals("hyphenated", tokenList.get(6).getOriginalWord());
+        assertEquals("word", tokenList.get(8).getOriginalWord());
+        assertEquals(TokenType.HYPHEN, tokenList.get(7).getTokenType());
+    }
 
 	@Test
 	public void wordAndDigitHyphenTest() {
 		MicroTextTokenizer tok = new MicroTextTokenizer("word-22");
 		tok.tokenize();
-		assertEquals("word-22", tok.getTokensAsList().get(0));
+		assertEquals("word", tok.getTokensAsList().get(0));
+		assertEquals("22", tok.getTokensAsList().get(2));
 	}
 
 	@Test

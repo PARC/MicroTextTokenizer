@@ -9,6 +9,7 @@ public class LexicalFSA {
         ON_AMPERSAND,
         ON_DOT,
         ON_PUNCT,
+        ON_HYPHEN,
         IN_WORD,
         IN_AT_NAME,
         IN_HASH_TAG,
@@ -39,28 +40,30 @@ public class LexicalFSA {
         OPEN_ANGLE,
         CLOSE_ANGLE,
         SPACE,
+        HYPHEN,
         UNKNOWN
     };
 
     private static State[][] stateTable = {
     	// START
-    	{State.IN_WORD, 				// ALPHA
+        {State.IN_WORD, 				// ALPHA
     	 State.ON_DIGIT, 				// DIGIT
     	 State.ON_EPOINT_OR_QMARK, 		// QMARK
-    	 State.ON_EPOINT_OR_QMARK, 		// EPOINT
+         State.ON_EPOINT_OR_QMARK, 		// EPOINT
     	 State.ON_DOT, 					// DECIMAL
     	 State.ON_DOT, 			// PERIOD
     	 State.ON_PUNCT, 		// COLON
     	 State.ON_PUNCT, 		// SEMI-COLON
-    	 State.ON_AMPERSAND,			// AMPERSAND
+         State.ON_AMPERSAND,			// AMPERSAND
     	 State.ON_PUNCT,			// PUNCT 
     	 State.ON_AT,					// AT_SIGN
     	 State.ON_HASH,					// HASH
-    	 State.ON_PUNCT,		// OPEN_PAREN
-    	 State.ON_PUNCT,		// CLOSE_PAREN
+         State.ON_PUNCT,		// OPEN_PAREN
+         State.ON_PUNCT,		// CLOSE_PAREN
     	 State.ON_PUNCT,		// OPEN_ANGLE
     	 State.ON_PUNCT,		// CLOSE_ANGLE
     	 State.BETWEEN_TOKENS,			// SPACE
+         State.ON_HYPHEN,       // HYPHEN
     	 State.ON_UNKNOWN},					// UNKNOWN
     	// ON_HASH
     	{State.IN_HASH_TAG,				// ALPHA
@@ -80,6 +83,7 @@ public class LexicalFSA {
     	 State.ON_PUNCT,		// OPEN_ANGLE
     	 State.ON_PUNCT,		// CLOSE_ANGLE
     	 State.BETWEEN_TOKENS,			// SPACE
+         State.ON_HYPHEN,       // HYPHEN
     	 State.ON_UNKNOWN,					// UNKNOWN
      	},
      	// ON_AT
@@ -100,6 +104,7 @@ public class LexicalFSA {
     	 State.ON_PUNCT, 				// OPEN_ANGLE
     	 State.ON_PUNCT,				// CLOSE_ANGLE
     	 State.BETWEEN_TOKENS,			// SPACE
+         State.ON_HYPHEN,       // HYPHEN
     	 State.ON_UNKNOWN,					// UNKNOWN
      	},
     	// ON_AMPERSAND
@@ -120,6 +125,7 @@ public class LexicalFSA {
     	 State.ON_PUNCT, 				// OPEN_ANGLE
     	 State.ON_PUNCT,				// CLOSE_ANGLE
     	 State.BETWEEN_TOKENS,			// SPACE
+         State.ON_HYPHEN,       // HYPHEN
     	 State.ON_UNKNOWN,					// UNKNOWN
      	},
     	// ON_DOT
@@ -140,6 +146,7 @@ public class LexicalFSA {
     	 State.ON_PUNCT, 				// OPEN_ANGLE
     	 State.ON_PUNCT,				// CLOSE_ANGLE
     	 State.BETWEEN_TOKENS,			// SPACE
+         State.ON_HYPHEN,       // HYPHEN
     	 State.ON_UNKNOWN,					// UNKNOWN
      	},
     	// ON_PUNCT
@@ -160,7 +167,28 @@ public class LexicalFSA {
     	 State.ON_PUNCT,		// OPEN_ANGLE
     	 State.ON_PUNCT,		// CLOSE_ANGLE
     	 State.ON_PUNCT,			// SPACE
+         State.ON_HYPHEN,       // HYPHEN
     	 State.ON_UNKNOWN},					// UNKNOWN
+        // ON_HYPHEN
+        {State.IN_WORD,                 // ALPHA
+         State.ON_DIGIT,                // DIGIT
+         State.ON_EPOINT_OR_QMARK,      // QMARK
+         State.ON_EPOINT_OR_QMARK,      // EPOINT
+         State.ON_DIGIT,                    // DECIMAL
+         State.ON_PUNCT,            // PERIOD
+         State.ON_PUNCT,        // COLON
+         State.ON_PUNCT,        // SEMI-COLON
+         State.ON_AMPERSAND,            // AMPERSAND
+         State.ON_PUNCT,            // PUNCT
+         State.ON_AT,                   // AT_SIGN
+         State.ON_HASH,                 // HASH
+         State.ON_PUNCT,        // OPEN_PAREN
+         State.ON_PUNCT,        // CLOSE_PAREN
+         State.ON_PUNCT,        // OPEN_ANGLE
+         State.ON_PUNCT,        // CLOSE_ANGLE
+         State.ON_PUNCT,            // SPACE
+         State.ON_HYPHEN,       // HYPHEN
+         State.ON_UNKNOWN},                 // UNKNOWN
     	// IN_WORD
      	{State.IN_WORD,				// ALPHA
        	 State.IN_WORD,				// DIGIT
@@ -179,6 +207,7 @@ public class LexicalFSA {
        	 State.ON_PUNCT, 		// OPEN_ANGLE
        	 State.ON_PUNCT,		// CLOSE_ANGLE
        	 State.BETWEEN_TOKENS,			// SPACE
+         State.ON_HYPHEN,       // HYPHEN
        	 State.ON_UNKNOWN,					// UNKNOWN
         },    
      	// IN_AT_NAME
@@ -199,6 +228,7 @@ public class LexicalFSA {
     	 State.ON_PUNCT,		// OPEN_ANGLE
     	 State.ON_PUNCT,		// CLOSE_ANGLE
     	 State.BETWEEN_TOKENS,			// SPACE
+         State.ON_HYPHEN,       // HYPHEN
     	 State.ON_UNKNOWN,					// UNKNOWN
      	},
     	// ON_HASH_TAG
@@ -219,6 +249,7 @@ public class LexicalFSA {
     	 State.ON_PUNCT, 		// OPEN_ANGLE
     	 State.ON_PUNCT,		// CLOSE_ANGLE
     	 State.BETWEEN_TOKENS,			// SPACE
+         State.ON_HYPHEN,       // HYPHEN
     	 State.ON_UNKNOWN,					// UNKNOWN
      	},
     	// ON_DIGIT
@@ -239,6 +270,7 @@ public class LexicalFSA {
     	 State.ON_PUNCT,		// OPEN_ANGLE
     	 State.ON_PUNCT,		// CLOSE_ANGLE
     	 State.BETWEEN_TOKENS,			// SPACE
+         State.ON_HYPHEN,       // HYPHEN
     	 State.ON_UNKNOWN},					// UNKNOWN
      	// BETWEEN_TOKENS
     	{State.IN_WORD, 				// ALPHA
@@ -258,6 +290,7 @@ public class LexicalFSA {
        	 State.ON_PUNCT,				// OPEN_ANGLE
        	 State.ON_PUNCT,				// CLOSE_ANGLE
        	 State.BETWEEN_TOKENS,			// SPACE
+         State.ON_HYPHEN,         // HYPHEN
        	 State.ON_UNKNOWN},					// UNKNOWN
        	// ON_EPOINT_OR_QMARK
       	{State.IN_WORD, 				// ALPHA
@@ -277,6 +310,7 @@ public class LexicalFSA {
        	 State.ON_PUNCT,			// OPEN_ANGLE
        	 State.ON_PUNCT,			// CLOSE_ANGLE
        	 State.BETWEEN_TOKENS,			// SPACE
+         State.ON_HYPHEN,         // HYPHEN
        	 State.ON_UNKNOWN},					// UNKNOWN
         // ON_ELLIPSIS
        	{State.IN_WORD, 				// ALPHA
@@ -296,6 +330,7 @@ public class LexicalFSA {
          State.ON_PUNCT,			// OPEN_ANGLE
          State.ON_PUNCT,			// CLOSE_ANGLE
          State.BETWEEN_TOKENS,			// SPACE
+         State.ON_HYPHEN,         // HYPHEN
          State.ON_UNKNOWN},					// UNKNOWN
          // URL
         {State.URL,						// ALPHA
@@ -315,6 +350,7 @@ public class LexicalFSA {
          State.ON_PUNCT, 		// OPEN_ANGLE
          State.ON_PUNCT,		// CLOSE_ANGLE
          State.BETWEEN_TOKENS,			// SPACE
+         State.ON_HYPHEN,         // HYPHEN
          State.ON_UNKNOWN,				// UNKNOWN
          },    
        	// ON_UNKNOWN
@@ -335,6 +371,7 @@ public class LexicalFSA {
        	 State.ON_PUNCT,		// OPEN_ANGLE
        	 State.ON_PUNCT,		// CLOSE_ANGLE
        	 State.BETWEEN_TOKENS,			// SPACE
+         State.ON_HYPHEN,         // HYPHEN
        	 State.ON_UNKNOWN},					// UNKNOWN
         // ON_ERROR
        	{State.START, 					// ALPHA
@@ -354,6 +391,7 @@ public class LexicalFSA {
        	 State.START,					// OPEN_ANGLE
        	 State.START,					// CLOSE_ANGLE
        	 State.START,					// SPACE
+         State.ON_HYPHEN,         // HYPHEN
        	 State.ON_UNKNOWN},					// UNKNOWN
     };
     
@@ -367,10 +405,11 @@ public class LexicalFSA {
         if (Character.isWhitespace(c))
             symbol = Alphabet.SPACE;
         else if (c == '-' || c == (char)0x2012 || c == (char)0x2013 || c == (char)0x2014 || c == (char)0x2015)
-        	if (Character.isLetter(lastchar) && (Character.isLetter(lookahead) || Character.isDigit(lookahead)))
-        		symbol = Alphabet.ALPHA;
-        	else
-        		symbol = Alphabet.PUNCT;
+//        	if (Character.isLetter(lastchar) && (Character.isLetter(lookahead) || Character.isDigit(lookahead)))
+//        		symbol = Alphabet.ALPHA;
+//        	else
+//        		symbol = Alphabet.PUNCT;
+            symbol = Alphabet.HYPHEN;
         else if (c == '=')
         	symbol = Alphabet.PUNCT;
         else if (Character.isLetter(c))

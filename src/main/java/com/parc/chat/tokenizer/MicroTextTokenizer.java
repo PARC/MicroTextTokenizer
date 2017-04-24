@@ -180,6 +180,12 @@ public class MicroTextTokenizer {
 			saveToken(TokenType.PUNCT);
 			state = State.BETWEEN_TOKENS;
 			break;
+        case ON_HYPHEN:
+            currentTokenPos = charPos;
+            appendSymbol(state, c, lastChar, nextChar);
+            saveToken(TokenType.HYPHEN);
+            state = State.BETWEEN_TOKENS;
+            break;
 		case IN_AT_NAME:
 		case IN_HASH_TAG:
 		case ON_ELLIPSIS:
@@ -236,6 +242,8 @@ public class MicroTextTokenizer {
    					saveToken(TokenType.PUNCT);
    				}
    				break;
+            case ON_HYPHEN:
+                saveToken(TokenType.HYPHEN);
    			case ON_DIGIT:
 				saveToken(TokenType.NUMERIC);
    				break;
