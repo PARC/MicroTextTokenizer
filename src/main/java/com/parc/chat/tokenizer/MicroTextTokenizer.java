@@ -41,20 +41,25 @@ public class MicroTextTokenizer {
     public static List<String> abbreviationList = Arrays.asList(
       "mr", "mrs", "dr", "ms", "st", "rd", "no");
 
-    // Define a transition network for URLs and hostnames as a regular expression.
+    // Define a pattern for URLs and hostnames as a regular expression.
+    private static String protocolList = "http|https|mailto|sftp|ftp|smb|htp|htps|smtp|fax|xrxscanwebservice|mailbox|usb|webdav|webdavs";
+    private static String urlRegex = "^(((" + protocolList + "):\\/\\/)" + "\\S+" + ").*";
+    private static Pattern urlPattern = Pattern.compile(urlRegex, Pattern.CASE_INSENSITIVE);
+
+    // Define a pattern for bare hostnames and hostnames plus a path.
     private static String topLevelDomainList = "com|edu|org|net|gov|mil|co|us";
     private static String domainPart = "([A-Za-z0-9-]+\\.)+(" + topLevelDomainList + ")";
-    private static String protocolList = "http|https|mailto|ftp";
-    private static String urlRegex = "^(((" + protocolList + "):\\/\\/)?" + domainPart + "(\\S+|$)).*";
-    private static Pattern urlPattern = Pattern.compile(urlRegex);
+    private static String filePath = "([\\w\\d\\.\\/-])+";
+    private static Pattern hostnamePattern = Pattern.compile("(" + domainPart + ")", Pattern.CASE_INSENSITIVE);
+    private static Pattern hostnamePathPattern = Pattern.compile("(" + domainPart + "\\/" + filePath + ")", Pattern.CASE_INSENSITIVE);
 
-    // Define a transition network for email addresses as a regular expression.
+    // Define a pattern for email addresses as a regular expression.
     // Warning: this doesn't recognize email addresses with quoted strings or comments.
     private static String localpart = "[^\\.\\s][a-zA-Z0-9!#$%&'*+\\-/=?\\^_`{|}~]*";
     private static String emailAddressRegex = "^(" + localpart + "@" + domainPart + ").*";
     private static Pattern emailPattern = Pattern.compile(emailAddressRegex);
 
-    // Define a transition network for file names as a regular expression.
+    // Define a pattern for file names as a regular expression.
     private static String fileExtension = "aiff?|au|avi|bat|bmp|class|csv|cvs|dbf|dif|docx?|eps|exe|fm3|gif|hqx|html?|java|jpeg"
            + "|jpg|mac|map|mdb|mid|midi|mov|mtb|mtw|pdf|png|ppt|pptx|psd|psp|qt|qxd|ra|rtf|sit|tar|tif|txt|wav|xls|xlsx|zip";
     private static String filenameRegex = "^(\\S+\\.(" + fileExtension + ")).*";
@@ -111,6 +116,7 @@ public class MicroTextTokenizer {
 		return originalText;
 	}
 
+	@Override
     public String toString() {
     	return originalText;
     }
@@ -310,6 +316,35 @@ public class MicroTextTokenizer {
 			return state = State.BETWEEN_TOKENS;
 	    }
 
+	    // Check for a hostname and file path together; tag it as a URL.
+	    m = hostnamePathPattern.matcher(originalText.substring(charPos));
+	    if (m.matches()) {
+	        String hostname = m.group(1);
+	        // Remove the final period.
+	        if (hostname.endsWith(".")) {
+	            hostname = hostname.substring(0,  hostname.length() - 1);
+	        }
+	        lexemeBuffer.append(hostname.toLowerCase());
+	        surfaceFormBuffer.append(hostname);
+	        currentTokenPos = charPos;
+	        saveToken(TokenType.URL);
+	        charPos += hostname.length() - 1;
+	        return state = State.BETWEEN_TOKENS;
+	    }
+
+	    // Check for a hostname, tag it as a URL.
+	    m = hostnamePattern.matcher(originalText.substring(charPos));
+	    if (m.matches()) {
+	        String hostname = m.group(1);
+	        lexemeBuffer.append(hostname.toLowerCase());
+	        surfaceFormBuffer.append(hostname);
+	        currentTokenPos = charPos;
+	        saveToken(TokenType.URL);
+	        charPos += hostname.length() - 1;
+	        return state = State.BETWEEN_TOKENS;
+	    }
+
+	    // Check for a filename
 	    m = filenamePattern.matcher(originalText.substring(charPos));
 	    if (m.matches()) {
 	        String filename = m.group(1);

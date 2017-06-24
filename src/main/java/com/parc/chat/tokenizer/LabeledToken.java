@@ -127,6 +127,7 @@ public class LabeledToken implements Serializable {
 	 * Returns a string representation showing the original token and its 
 	 * part-of-speech separated by a slash.
 	 */
+    @Override
 	public String toString() {
 		return originalWord + "/" + stem;
 	}

@@ -349,9 +349,9 @@ public class MicroTextTokenizerTest {
 	public void testSpecialStems() {
 	    MicroTextTokenizer tok = new MicroTextTokenizer("Hello @kdent http://tinyurl.us/asdf :)");
 	    Stack<LabeledToken> tokenStack = tok.tokenize();
+        assertEquals(6, tokenStack.get(1).getCharacterPosition());
+        assertEquals(13, tokenStack.get(2).getCharacterPosition());
 	    assertEquals("[Hello/hello, @kdent/ATNAME, http://tinyurl.us/asdf/http://tinyurl.us/asdf, :)/:)]", tokenStack.toString());
-	    assertEquals(6, tokenStack.get(1).getCharacterPosition());
-	    assertEquals(13, tokenStack.get(2).getCharacterPosition());
 	}
 
 	@Test
@@ -569,6 +569,27 @@ public class MicroTextTokenizerTest {
 	        List<LabeledToken> tokenList = tok.tokenize();
 	        assertEquals("testpage.pdf", tokenList.get(0).getOriginalWord());
 	        assertEquals(TokenType.FILENAME, tokenList.get(0).getTokenType());
+	}
+
+	@Test
+	public void testSmbUrl() {
+	    MicroTextTokenizer tok = new MicroTextTokenizer("Open the file at smb://samba.parc.com/tilde/m/maxwell");
+	    List<LabeledToken> tokenList = tok.tokenize();
+	    assertEquals("smb://samba.parc.com/tilde/m/maxwell", tokenList.get(4).getOriginalWord());
+	}
+
+	@Test
+	public void testWebDavsUrl() {
+	    MicroTextTokenizer tok = new MicroTextTokenizer("transfer it to WebDavS://jtmmp.parc.xerox.com/Public");
+	    List<LabeledToken> tokenList = tok.tokenize();
+	    assertEquals("WebDavS://jtmmp.parc.xerox.com/Public", tokenList.get(3).getOriginalWord());
+	}
+
+	@Test
+	public void testSftpUrl() {
+	    MicroTextTokenizer tok = new MicroTextTokenizer("the site Sftp://jtmmp.parc.xerox.com/Public has the file.");
+	    List<LabeledToken> tokenList = tok.tokenize();
+	    assertEquals("Sftp://jtmmp.parc.xerox.com/Public", tokenList.get(2).getOriginalWord());
 	}
 
 }
