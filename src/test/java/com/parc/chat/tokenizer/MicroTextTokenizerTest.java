@@ -592,4 +592,17 @@ public class MicroTextTokenizerTest {
 	    assertEquals("Sftp://jtmmp.parc.xerox.com/Public", tokenList.get(2).getOriginalWord());
 	}
 
+	@Test
+	public void testIPAddrUrl() {
+	    MicroTextTokenizer tok = new MicroTextTokenizer("get the file from http://13.101.3.213/tilde/k/kdent");
+	    List<LabeledToken> tokenList = tok.tokenize();
+	    assertEquals("http://13.101.3.213/tilde/k/kdent", tokenList.get(4).getOriginalWord());
+	}
+
+	@Test
+	public void testUrlWithPort() {
+        MicroTextTokenizer tok = new MicroTextTokenizer("get the file from http://13.101.3.213:8080/tilde/k/kdent");
+        List<LabeledToken> tokenList = tok.tokenize();
+        assertEquals("http://13.101.3.213:8080/tilde/k/kdent", tokenList.get(4).getOriginalWord());
+	}
 }
